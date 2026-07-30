@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Prompt</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2E3E64;
+            color: #c7c6c4;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #c7c6c4;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .form-container {
+            background-color: #C0C0C0;
+            border: 1px solid #4a4e52;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #c7c6c4;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 14px;
+            background-color: #161719;
+            border: 1px solid #4a4e52;
+            border-radius: 5px;
+            color: #c7c6c4;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3f67c0;
+        }
+
+        input[type="text"]::placeholder {
+            color: #8a8f98;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 15px;
+            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #161719;
+            border: 1px solid #4a4e52;
+            border-radius: 5px;
+            resize: vertical;
+            line-height: 1.6;
+            color: #d1d4d9;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3f67c0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .add-btn {
+            padding: 12px 40px;
+            font-size: 16px;
+            background-color: #3f67c0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-btn:hover {
+            background-color: #304fc2;
+        }
+
+        .add-btn:active {
+            background-color: #293b75;
+        }
+
+        .back-btn {
+            padding: 12px 40px;
+            font-size: 16px;
+            background-color: #505458;
+            color: #c7c6c4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #4a4e52;
+        }
+
+        .message {
+            background-color: #3f67c0;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .error {
+            background-color: #d32f2f;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .add-btn,
+            .back-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New Prompt</h1>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+
+    {% if error %}
+        <div class="message error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="{% url 'new_prompt' %}">
+        <div class="form-container">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="prompt_name">Prompt Name<span class="required">*</span></label>
+                <input type="text" id="prompt_name" name="prompt_name" placeholder="Enter a name for this prompt (e.g., Email Template, Blog Post, etc.)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prompt_content">Prompt Content<span class="required">*</span></label>
+                <textarea id="prompt_content" name="prompt_content" placeholder="Enter your prompt text here..." required></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="add-btn">Add</button>
+                <a href="{% url 'main_page' %}" class="back-btn">Back</a>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

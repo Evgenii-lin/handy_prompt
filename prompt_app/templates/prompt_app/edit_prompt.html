@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Prompt</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1d2021;
+            color: #c7c6c4;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 26px;
+            font-family: Arial, sans-serif;
+            
+        }
+
+        .form-container {
+            background-color: #25282b;
+            border: 1px solid #4a4e52;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c7c6c4;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 14px;
+            background-color: #161719;
+            border: 1px solid #4a4e52;
+            border-radius: 5px;
+            color: #c7c6c4;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3f67c0;
+        }
+
+        input[type="text"]::placeholder {
+            color: #8a8f98;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 15px;
+            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #161719;
+            border: 1px solid #4a4e52;
+            border-radius: 5px;
+            resize: vertical;
+            line-height: 1.6;
+            color: #d1d4d9;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3f67c0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .save-btn {
+            padding: 12px 40px;
+            font-size: 16px;
+            background-color: #3f67c0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #304fc2;
+        }
+
+        .save-btn:active {
+            background-color: #293b75;
+        }
+
+        .back-btn {
+            padding: 12px 40px;
+            font-size: 16px;
+            background-color: #505458;
+            color: #c7c6c4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #4a4e52;
+        }
+
+        .back-btn:active {
+            background-color: #3f4245;
+        }
+
+        .message {
+            background-color: #3f67c0;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .error {
+            background-color: #d32f2f;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .save-btn,
+            .back-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Prompt</h1>
+
+    {% if message %}
+        <div class="message {% if error %}error{% endif %}">{{ message }}</div>
+    {% endif %}
+
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="prompt_id" value="{{ prompt.id }}">
+
+            <div class="form-group">
+                <label for="prompt_name">Prompt Name <span class="required">*</span></label>
+                <input type="text" id="prompt_name" name="prompt_name" value="{{ prompt.name }}" required placeholder="Enter prompt name">
+            </div>
+
+            <div class="form-group">
+                <label for="prompt_content">Prompt Content <span class="required">*</span></label>
+                <textarea id="prompt_content" name="prompt_content" required placeholder="Enter prompt content">{{ prompt.content }}</textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="save-btn">Save</button>
+                <a href="{% url 'main_page' %}" class="back-btn">Back</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
