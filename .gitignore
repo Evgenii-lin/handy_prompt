@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Model weights
+models/*.gguf
+models/*.bin
+models/*.safetensors
+
+# Database
+prompt_database.db
+
+# Packaged executable
+dist/
+*.exe
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# HuggingFace cache
+.cache/
