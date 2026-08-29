@@ -1,5 +1,5 @@
 """Window for adding a new prompt (with optional AI generation)."""
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QTextEdit, QPushButton, QProgressBar, QMessageBox,
 )
@@ -26,7 +26,8 @@ class AddPromptWindow(QMainWindow):
         layout.setSpacing(15)
         layout.setContentsMargins(20, 20, 20, 20)
 
-        lbl = QLabel("Enter Prompt Name"); lbl.setObjectName("field_label")
+        lbl = QLabel("Enter Prompt Name")
+        lbl.setObjectName("field_label")
         layout.addWidget(lbl)
 
         self.name_field = QTextEdit()
@@ -35,7 +36,8 @@ class AddPromptWindow(QMainWindow):
         self.name_field.setMaximumHeight(60)
         layout.addWidget(self.name_field)
 
-        lbl2 = QLabel("Keywords for AI generation"); lbl2.setObjectName("field_label")
+        lbl2 = QLabel("Keywords for AI generation")
+        lbl2.setObjectName("field_label")
         layout.addWidget(lbl2)
 
         self.keywords_field = QTextEdit()
@@ -53,7 +55,8 @@ class AddPromptWindow(QMainWindow):
         self.progress.setVisible(False)
         layout.addWidget(self.progress)
 
-        lbl3 = QLabel("Generated Prompt Content"); lbl3.setObjectName("field_label")
+        lbl3 = QLabel("Generated Prompt Content")
+        lbl3.setObjectName("field_label")
         layout.addWidget(lbl3)
 
         self.output = QTextEdit()
@@ -128,5 +131,6 @@ class AddPromptWindow(QMainWindow):
         self.close()
 
     def closeEvent(self, event):
-        self.db.close()
+        if self.parent_window is None:
+            self.db.close()
         event.accept()

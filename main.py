@@ -1,7 +1,7 @@
 """Application entry point."""
 import sys
 
-from PyQt6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 from theme import DARK_THEME
 from ui.main_window import MainWindow
