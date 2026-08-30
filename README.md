@@ -1,6 +1,12 @@
 Handy Prompt
 
-A lightweight, local AI assistant powered by Qwen and llama-cpp-python, featuring a modern graphical user interface built with PySide6 and chat history persistence via SQLite.
+A lightweight, comfortable local AI assistant powered to help making prompts for AI agents by Qwen and llama-cpp-python, featuring a modern graphical user interface built with PySide6 and chat history persistence via SQLite.
+
+## Download
+
+[📥 Latest release — v1.0]
+
+https://github.com/Evgenii-lin/handy-prompt/releases/latest
 
 ## Features
 
@@ -36,7 +42,7 @@ A lightweight, local AI assistant powered by Qwen and llama-cpp-python, featurin
 ## Getting Started
 
 1. Download a Model:
-   When generating prompt for the first time, Qwen model (e.g., Qwen2.5-7B-Instruct-GGUF) from Hugging Face  will be                                             downloaded to models/ folder.
+   When generating prompt for the first time, Qwen model (e.g., Qwen2.5-7B-Instruct-GGUF) from Hugging Face  will be downloaded to models/ folder.
 3. Run the Application:
    python main.py
 
