@@ -181,13 +181,21 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, "Success", "Prompt deleted.")
 
     def _show_about(self):
-        text = (
-            "<h3>Handy Prompt</h3>"
-            "<p><b>Version:</b> 1.0.0</p>"
-            "<p>AI prompt manager</p>"
-            "<p><b>Author:</b> Evgenii Savenkov</p>"
-            "<p><b>License:</b> MIT</p>"
-        )
+        text = """
+        <h3>About Handy Prompt</h3>
+        <p>Version 1.0.0<br>© 2026 @Evgenii-lin. This software is released under the <b>MIT License</b>.</p>
+        
+        <hr>
+        <p><b>Third-Party Components:</b></p>
+        <ul>
+            <li><b>Python</b> (<a href="https://python.org">PSF License</a>)</li>
+            <li><b>llama-cpp-python</b> (<a href="https://github.com">MIT License</a>)</li>
+            <li><b>PySide6</b> (<a href="https://gnu.org">GNU LGPLv3</a>). Users can dynamically relink Qt libraries.</li>
+            <li><b>Hugging Face Transformers</b> (<a href="https://github.com">Apache 2.0</a>)</li>
+            <li><b>Qwen Model Series</b> (<a href="https://github.com">Apache 2.0 / Qwen License</a>) by Alibaba Cloud</li>
+            <li><b>SQLite</b> (<a href="https://sqlite.org">Public Domain</a>)</li>
+        </ul>
+        """
         QMessageBox.about(self, "About", text)
 
     # ------------------------------------------------------------------
