@@ -1,10 +1,14 @@
 """Background worker thread for LLM inference and model download."""
+import requests
 from PySide6.QtCore import QThread, Signal, QMutex
 
-from huggingface_hub import hf_hub_download
 from huggingface_hub.utils import tqdm as hf_tqdm
 
 from config import REPO_ID, MODEL_FILENAME, MODEL_PATH
+
+DOWNLOAD_URL = (
+    f"https://huggingface.co/{REPO_ID}/resolve/main/{MODEL_FILENAME}"
+)
 
 try:
     from llama_cpp import Llama
@@ -86,23 +90,32 @@ class LlamaWorker(QThread):
             try:
                 self.progress_changed.emit(5)
                 emitter = ProgressEmitter(self.progress_changed)
-                hf_hub_download(
-                    repo_id=REPO_ID,
-                    filename=MODEL_FILENAME,
-                    local_dir=str(MODEL_PATH.parent),
-                    local_dir_use_symlinks=False,
-                    force_download=True,
-                    resume_download=True,
-                    tqdm_class=lambda *a, **kw: QThreadTqdm(emitter, *a, **kw),
-                )
-                if MODEL_PATH.is_file():
-                    self.progress_changed.emit(100)
-                    if Llama:
-                        self.llm = Llama(model_path=str(MODEL_PATH), n_ctx=2048)
-                else:
-                    self.error_occurred.emit("Download failed! File not found.")
-                    self.finished_generation.emit()
-                    return
+
+                tmp_path = MODEL_PATH.with_suffix(".part")
+
+                with requests.get(
+                    DOWNLOAD_URL,
+                    stream=True,
+                    headers={"User-Agent": "HandyPrompt/1.0"},
+                ) as resp:
+                    resp.raise_for_status()
+                    total = int(resp.headers.get("content-length", 0))
+
+                    downloaded = 0
+                    with open(tmp_path, "wb") as f:
+                        for chunk in resp.iter_content(chunk_size=8 * 1024 * 1024):
+                            f.write(chunk)
+                            downloaded += len(chunk)
+                            if total > 0:
+                                pct = int(downloaded / total * 100)
+                                emitter.emit_progress(pct)
+
+                tmp_path.rename(MODEL_PATH)
+                self.progress_changed.emit(100)
+
+                if Llama:
+                    self.llm = Llama(model_path=str(MODEL_PATH), n_ctx=2048)
+
             except Exception as e:
                 self.error_occurred.emit(f"Download error: {e}")
                 self.finished_generation.emit()
