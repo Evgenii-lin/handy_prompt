@@ -80,6 +80,22 @@ QPushButton#save_button {
 }
 QPushButton#save_button:hover { background-color: #1976d2; }
 
+QPushButton#analyze_button {
+    background-color: #008080;
+    color: white;
+    border: none;
+}
+QPushButton#analyze_button:hover { background-color: #00a8a8; }
+
+
+QPushButton#upload_button {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+}
+QPushButton#upload_button:hover { background-color: #388e3c; }
+
+
 QPushButton#add_button {
     background-color: #2e7d32;
     color: white;
