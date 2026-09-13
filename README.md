@@ -1,10 +1,10 @@
 Handy Prompt
 
-A lightweight, comfortable local AI assistant powered to help making prompts for AI agents by Qwen and llama-cpp-python, featuring a modern graphical user interface built with PySide6 and chat history persistence via SQLite.
+Analyze server & network device configs, generate AI agent prompts — fully local, no cloud.
 
 ## Download
 
-[📥 Latest release — v1.0]
+[📥 Latest release — v1.0.1]
 
 https://github.com/Evgenii-lin/handy-prompt/releases/latest
 
