@@ -58,6 +58,8 @@ class MainWindow(QMainWindow):
 
         top_layout.addStretch()
 
+        self.analyze_btn = QPushButton("Analyze")
+        self.analyze_btn.setObjectName("analyze_button")
         self.copy_btn = QPushButton("Copy")
         self.copy_btn.setObjectName("copy_button")
         self.add_btn = QPushButton("Add New Prompt")
@@ -70,6 +72,7 @@ class MainWindow(QMainWindow):
         self.del_btn = QPushButton("Delete")
         self.del_btn.setObjectName("del_button")
 
+        self.analyze_btn.clicked.connect(self._open_analyze)
         self.add_btn.clicked.connect(self._open_add)
         self.save_btn.clicked.connect(self._save_to_file)
         self.copy_btn.clicked.connect(self._copy_to_clipboard)
@@ -114,6 +117,11 @@ class MainWindow(QMainWindow):
             return
         self._child = EditPromptWindow(choice=self.current_choice, parent=self, db=self.db)
         self._child.show()
+
+    def _open_analyze(self):
+            self._child = AnalyzeWindow()
+            self._child.show()
+
 
     def _save_to_file(self):
         if not self.current_choice:
@@ -183,7 +191,7 @@ class MainWindow(QMainWindow):
     def _show_about(self):
         text = """
         <h3>About Handy Prompt</h3>
-        <p>Version 1.0.0<br>© 2026 @Evgenii-lin. This software is released under the <b>MIT License</b>.</p>
+        <p>Version 1.0.1<br>© 2026 @Evgenii-lin. This software is released under the <b>MIT License</b>.</p>
         
         <hr>
         <p><b>Third-Party Components:</b></p>
