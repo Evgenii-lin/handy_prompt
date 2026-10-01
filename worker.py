@@ -77,10 +77,21 @@ class LlamaWorker(QThread):
             self.llm = None
         else:
             self.needs_download = False
+            self.llm = None
             if Llama:
-                self.llm = Llama(model_path=str(MODEL_PATH), n_ctx=2048)
-            else:
-                self.llm = None
+                try:
+                    self.llm = Llama(model_path=str(MODEL_PATH), n_ctx=2048)
+                except Exception as e:
+                    # Corrupt/partial download → re-download instead of
+                    # crashing with llama_cpp's raw "Model path does not
+                    # exist" ValueError.
+                    self.llm = None
+                    self.needs_download = True
+                    self.error_occurred.emit(
+                        f"Could not load the model file: {e}\n"
+                        f"({MODEL_PATH})\n"
+                        "Press the button again — it will be re-downloaded."
+                    )
 
     # ------------------------------------------------------------------
     def run(self) -> None:
