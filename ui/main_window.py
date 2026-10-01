@@ -10,6 +10,8 @@ from PySide6.QtGui import QIcon
 from database import PromptDatabase
 from ui.add_prompt import AddPromptWindow
 from ui.edit_prompt import EditPromptWindow
+from ui.analyze import AnalyzeWindow
+from ui.inspect_conf import InspectWindow
 
 
 class MainWindow(QMainWindow):
@@ -25,9 +27,11 @@ class MainWindow(QMainWindow):
 
     # ------------------------------------------------------------------
     def _set_icon(self):
-        icon_path = Path(__file__).parent.parent / "assets" / "icon.png"
+        from config import resource_path
+        icon_path = resource_path("assets/icon.png")
         if icon_path.exists():
             self.setWindowIcon(QIcon(str(icon_path)))
+
 
     # ------------------------------------------------------------------
     def _init_ui(self):
@@ -58,8 +62,13 @@ class MainWindow(QMainWindow):
 
         top_layout.addStretch()
 
+
         self.analyze_btn = QPushButton("Analyze")
         self.analyze_btn.setObjectName("analyze_button")
+
+        self.inspect_btn = QPushButton("Inspect")
+        self.inspect_btn.setObjectName("inspect_button")
+
         self.copy_btn = QPushButton("Copy")
         self.copy_btn.setObjectName("copy_button")
         self.add_btn = QPushButton("Add New Prompt")
@@ -72,17 +81,22 @@ class MainWindow(QMainWindow):
         self.del_btn = QPushButton("Delete")
         self.del_btn.setObjectName("del_button")
 
+
         self.analyze_btn.clicked.connect(self._open_analyze)
+        self.inspect_btn.clicked.connect(self._open_inspect)
         self.add_btn.clicked.connect(self._open_add)
+        self.edit_btn.clicked.connect(self._open_edit)
         self.save_btn.clicked.connect(self._save_to_file)
         self.copy_btn.clicked.connect(self._copy_to_clipboard)
-        self.edit_btn.clicked.connect(self._open_edit)
         self.del_btn.clicked.connect(self._delete_prompt)
 
-        top_layout.addWidget(self.copy_btn)
+
+        top_layout.addWidget(self.analyze_btn)
+        top_layout.addWidget(self.inspect_btn)
         top_layout.addWidget(self.add_btn)
-        top_layout.addWidget(self.save_btn)
         top_layout.addWidget(self.edit_btn)
+        top_layout.addWidget(self.copy_btn)
+        top_layout.addWidget(self.save_btn)
         top_layout.addWidget(self.del_btn)
 
         layout.addWidget(top)
@@ -119,9 +133,15 @@ class MainWindow(QMainWindow):
         self._child.show()
 
     def _open_analyze(self):
+            #if not self.current_choice:
+            #    QMessageBox.warning(self, "Warning", "Please select a prompt first.")
+            #    return
             self._child = AnalyzeWindow()
             self._child.show()
 
+    def _open_inspect(self):
+            self._child = InspectWindow()
+            self._child.show()
 
     def _save_to_file(self):
         if not self.current_choice:
