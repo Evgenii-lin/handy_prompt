@@ -88,6 +88,16 @@ QPushButton#analyze_button {
 QPushButton#analyze_button:hover { background-color: #00a8a8; }
 
 
+QPushButton#inspect_button {
+    background-color: #005F5F;
+    color: white;
+    border: none;
+}
+QPushButton#inspect_button:hover { background-color: #008080; }
+
+
+
+
 QPushButton#upload_button {
     background-color: #2e7d32;
     color: white;
