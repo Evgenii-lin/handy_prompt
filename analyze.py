@@ -11,14 +11,16 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import QThread, Signal
 
-MODELS_DIR = Path("./models")
-MODELS_DIR.mkdir(parents=True, exist_ok=True)
-
-MODEL_7B_FILENAME = "qwen2.5-coder-7b-instruct-q4_k_m.gguf"
-MODEL_7B_PATH = MODELS_DIR / MODEL_7B_FILENAME
+# Use the frozen-aware paths from config so the model lives next to the
+# .exe (or in the project folder in dev) — never relative to the CWD.
+from config import (
+    MODELS_DIR,
+    MODEL_PATH as MODEL_7B_PATH,
+    REPO_ID,
+    MODEL_FILENAME as MODEL_7B_FILENAME,
+)
 MODEL_7B_URL = (
-    f"https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF"
-    f"/resolve/main/{MODEL_7B_FILENAME}"
+    f"https://huggingface.co/{REPO_ID}/resolve/main/{MODEL_7B_FILENAME}"
 )
 
 EXPLAIN_PROMPT = (
@@ -88,6 +90,7 @@ that a route-map also references)
 # Model: load the GGUF once, reuse it for every analysis
 # ─────────────────────────────────────────────────────────────
 _LLM_CACHE = {}
+
 
 
 def get_llm(n_ctx: int = 4096, n_gpu_layers: int = -1) -> Llama:
@@ -176,13 +179,31 @@ class AnalyzeWorker(QThread):
         self.file_contents = file_contents
 
     def run(self):
+        if not MODEL_7B_PATH.is_file():
+            self.finished_err.emit(
+                f"Model file not found: {MODEL_7B_PATH}\n\n"
+                "Download it first from the Analyze window (press Upload — "
+                "the download starts automatically), or put the .gguf file "
+                "in the models/ folder next to the app."
+            )
+            return
+
         try:
             first_load = not _LLM_CACHE
             self.progress.emit(
                 "Loading model... (first analysis takes a while)" if first_load
                 else "Analyzing..."
             )
-            llm = get_llm(n_ctx=8192, n_gpu_layers=-1)
+            try:
+                llm = get_llm(n_ctx=8192, n_gpu_layers=-1)
+            except Exception as e:
+                self.finished_err.emit(
+                    f"Could not load the local model: {e}\n\n"
+                    f"Expected file: {MODEL_7B_PATH}\n"
+                    "If the file is corrupt or incomplete, delete it and "
+                    "press Upload again to re-download."
+                )
+                return
 
             self.progress.emit("Analyzing...")
             messages = [
@@ -206,6 +227,12 @@ class AnalyzeWorker(QThread):
 
 """Main application window – prompt browser and toolbar."""
 
+
+#from database import PromptDatabase
+#from ui.add_prompt import AddPromptWindow
+#from ui.edit_prompt import EditPromptWindow
+
+
 class AnalyzeWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -222,7 +249,12 @@ class AnalyzeWindow(QMainWindow):
         self._init_ui()
 
     # ------------------------------------------------------------------
-    
+    #def _set_icon(self):
+    #    from config import resource_path
+    #    icon_path = resource_path("assets/icon.png")
+    #    if icon_path.exists():
+    #        self.setWindowIcon(QIcon(str(icon_path)))
+
 
     # ------------------------------------------------------------------
     def _init_ui(self):
@@ -244,7 +276,12 @@ class AnalyzeWindow(QMainWindow):
 
         self.label = QLabel("")
         self.label.setObjectName("status_label")
-        #top_layout.addWidget(self.label)  
+        #top_layout.addWidget(self.label)
+
+        #self.about_btn = QPushButton("About")
+        #self.about_btn.setFixedHeight(std_h)
+        #self.about_btn.clicked.connect(self._show_about)
+        #top_layout.addWidget(self.about_btn)
 
         top_layout.addStretch()
 
@@ -268,11 +305,16 @@ class AnalyzeWindow(QMainWindow):
 
         self.upload_btn.clicked.connect(self._open_add)
         self.save_btn.clicked.connect(self._save_to_file)
-        
-        
+        #self.copy_btn.clicked.connect(self._copy_to_clipboard)
+        #self.edit_btn.clicked.connect(self._open_edit)
+        #self.del_btn.clicked.connect(self._delete_prompt)
+
+        #top_layout.addWidget(self.copy_btn)
         top_layout.addWidget(self.upload_btn)
         top_layout.addWidget(self.save_btn)
-        
+        #top_layout.addWidget(self.edit_btn)
+        #top_layout.addWidget(self.del_btn)
+
         layout.addWidget(top)
 
         # -- Display --
@@ -403,8 +445,15 @@ class AnalyzeWindow(QMainWindow):
             for w in (self.download_worker, self.worker):
                 if w is not None and w.isRunning():
                     w.wait(5000)
-        super().closeEvent(event)   
-   
+        super().closeEvent(event)
+
+
+    #def _open_edit(self):
+    #    if not self.current_choice:
+    #        QMessageBox.warning(self, "Warning", "Please select a prompt first.")
+    #        return
+    #    self._child = EditPromptWindow(choice=self.current_choice, parent=self, db=self.db)
+    #    self._child.show()
 
     def _save_to_file(self):
         content = self.chat_display.toPlainText()
