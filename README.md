@@ -2,11 +2,22 @@ Handy Prompt
 
 Analyze server & network device configs, generate AI agent prompts — fully local, no cloud.
 
+## Screenshots
+
+### Analyze mode
+![Analyze](assets/screenshot_analyze.png)
+
+### Inspect mode
+![Inspect](assets/screenshot_inspect.png)
+
+### Prompt Generate
+![Prompt](assets/screenshot_prompt.png)
+
 ## Download
 
-[📥 Latest release — v1.0.1]
+[📥 Latest release — v1.0.2]
 
-https://github.com/Evgenii-lin/handy_prompt/releases/tag/v1.0.1
+https://github.com/Evgenii-lin/handy_prompt/releases/tag/v1.0.2
 
 ## Features
 
