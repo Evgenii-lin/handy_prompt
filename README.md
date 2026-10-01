@@ -17,7 +17,7 @@ Analyze server & network device configs, generate AI agent prompts — fully loc
 
 [📥 Latest release — v1.0.2]
 
-https://github.com/Evgenii-lin/handy_prompt/releases/tag/v1.0.2
+https://github.com/Evgenii-lin/handy_prompt/releases
 
 ## Features
 
